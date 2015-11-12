@@ -1,0 +1,6 @@
+<tableset inputpath="excel" outputpath="table" language="cpp">
+	<table name="Person" book="example.xls" sheet="Sheet1">
+		<field name="Id" title="编号" type="int" key="1"/>
+		<field name="Name" title="名称" type="string"/>
+	</table>
+</tableset>
