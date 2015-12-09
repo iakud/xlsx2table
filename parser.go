@@ -30,8 +30,11 @@ func (this *Parser) ParseTable(table *Table) {
 	}
 
 	if sheet, ok := file.Sheet[table.Sheet]; ok {
-		//fmt.Errorf("xl/_rels/workbook.xml.rels not found in input xlsx.")
-		this.parseFields(sheet, table.Columns)
+		if this.checkField(sheet) {
+			this.parseFields(sheet, table.Columns)
+		}
+	} else {
+		log.Println(filename, "not found.")
 	}
 }
 
@@ -66,6 +69,7 @@ func (this *Parser) parseField(row *xlsx.Row, column Column) (*Field, bool) {
 	}
 	return nil, false
 }
+
 func (this *Parser) export() {
 
 }
