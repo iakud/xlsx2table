@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <tableset inputpath="excel" outputpath="table" language="cpp">
-	<table name="Person" book="example.xls" sheet="Sheet1">
-		<field name="Id" key="1" title="编号" type="int"/>
-		<field name="Name" title="名称" type="string"/>
+	<table name="Person" file="example.xlsx" sheet="Sheet1">
+		<column name="Id" key="1" title="编号" type="int"/>
+		<column name="Name" title="名称" type="string"/>
 	</table>
 </tableset>
