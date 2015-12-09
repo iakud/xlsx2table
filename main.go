@@ -18,15 +18,14 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	relativeDir := filepath.Dir(filename)
+	relativedir := filepath.Dir(filename)
 
-	generator := NewGenerator()
-	generator.InputPath = filepath.Join(relativeDir, tableset.InputPath)
-	generator.OutputPath = filepath.Join(relativeDir, tableset.OutputPath)
-	generator.Language = tableset.Language
+	inputpath := filepath.Join(relativedir, tableset.InputPath)
+	outputpath := filepath.Join(relativedir, tableset.OutputPath)
+	parser := NewParser(inputpath, outputpath, tableset.Language)
 
 	for _, table := range tableset.Tables {
-		generator.ParseTable(&table)
+		parser.ParseTable(&table)
 	}
 }
 

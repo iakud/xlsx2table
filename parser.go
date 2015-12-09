@@ -6,10 +6,10 @@ import (
 	"path/filepath"
 )
 
-type Generator struct {
-	InputPath  string
-	OutputPath string
-	Language   string
+type Parser struct {
+	inputpath  string
+	outputpath string
+	language   string
 	/*
 		name      string
 		sheet     *xlsx.Sheet*/
@@ -17,12 +17,12 @@ type Generator struct {
 	fields    []*Field
 }
 
-func NewGenerator() *Generator {
-	return &Generator{}
+func NewParser(inputpath, outputpath, language string) *Parser {
+	return &Parser{inputpath: inputpath, outputpath: outputpath, language: language}
 }
 
-func (this *Generator) ParseTable(table *Table) {
-	filename := filepath.Join(this.InputPath, table.File)
+func (this *Parser) ParseTable(table *Table) {
+	filename := filepath.Join(this.inputpath, table.File)
 	file, err := xlsx.OpenFile(filename)
 	if err != nil {
 		log.Println(err)
@@ -35,14 +35,14 @@ func (this *Generator) ParseTable(table *Table) {
 	}
 }
 
-func (this *Generator) checkField(sheet *xlsx.Sheet) bool {
+func (this *Parser) checkField(sheet *xlsx.Sheet) bool {
 	if sheet.MaxRow < 2 {
 		return false
 	}
 	return true
 }
 
-func (this *Generator) parseFields(sheet *xlsx.Sheet, columns []Column) bool {
+func (this *Parser) parseFields(sheet *xlsx.Sheet, columns []Column) bool {
 	row := sheet.Rows[0]
 	for _, column := range columns {
 		if field, ok := this.parseField(row, column); ok {
@@ -58,7 +58,7 @@ func (this *Generator) parseFields(sheet *xlsx.Sheet, columns []Column) bool {
 	return true
 }
 
-func (this *Generator) parseField(row *xlsx.Row, column Column) (*Field, bool) {
+func (this *Parser) parseField(row *xlsx.Row, column Column) (*Field, bool) {
 	for index, cell := range row.Cells {
 		if cell.String() == column.Title {
 			return &Field{column.Name, index, column.Type, column.Title}, false
@@ -66,6 +66,6 @@ func (this *Generator) parseField(row *xlsx.Row, column Column) (*Field, bool) {
 	}
 	return nil, false
 }
-func (this *Generator) export() {
+func (this *Parser) export() {
 
 }
