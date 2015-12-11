@@ -1,75 +1,58 @@
 package main
 
 import (
+	"fmt"
 	"github.com/tealeg/xlsx"
-	"log"
-	"path/filepath"
 )
 
-type Parser struct {
-	inputpath  string
-	outputpath string
-	language   string
-	/*
-		name      string
-		sheet     *xlsx.Sheet*/
-	keyfields []*Field
-	fields    []*Field
+var FieldTypeMap = map[string]int{
+	"bool":   FieldTypeBool,
+	"int8":   FieldTypeInt8,
+	"uint8":  FieldTypeUInt8,
+	"int16":  FieldTypeInt16,
+	"uint16": FieldTypeUInt16,
+	"int32":  FieldTypeInt32,
+	"uint32": FieldTypeUInt32,
+	"int64":  FieldTypeInt64,
+	"uint64": FieldTypeUInt64,
+	"float":  FieldTypeFloat32,
+	"double": FieldTypeFloat64,
+	"string": FieldTypeString,
 }
 
-func NewParser(inputpath, outputpath, language string) *Parser {
-	return &Parser{inputpath: inputpath, outputpath: outputpath, language: language}
-}
-
-func (this *Parser) ParseTable(table *Table) {
-	filename := filepath.Join(this.inputpath, table.File)
-	file, err := xlsx.OpenFile(filename)
-	if err != nil {
-		log.Println(err)
-		return
-	}
-
-	if sheet, ok := file.Sheet[table.Sheet]; ok {
-		if this.checkField(sheet) {
-			this.parseFields(sheet, table.Columns)
+func ParseColumn(row *xlsx.Row, title string) (int, error) {
+	for column, cell := range row.Cells {
+		if cell.String() == title {
+			return column, nil
 		}
-	} else {
-		log.Println(filename, "not found.")
 	}
+	return 0, fmt.Errorf("unknow column.")
 }
 
-func (this *Parser) checkField(sheet *xlsx.Sheet) bool {
-	if sheet.MaxRow < 2 {
-		return false
-	}
-	return true
-}
-
-func (this *Parser) parseFields(sheet *xlsx.Sheet, columns []Column) bool {
-	row := sheet.Rows[0]
+func ParserFields(row *xlsx.Row, columns []Column) ([]*Field, []*Field, error) {
+	var keyfields, fields []*Field
+	fieldmap := make(map[string]*Field)
 	for _, column := range columns {
-		if field, ok := this.parseField(row, column); ok {
-			if column.Key {
-				this.keyfields = append(this.keyfields, field)
-			} else {
-				this.fields = append(this.fields, field)
-			}
+		if _, ok := fieldmap[column.Name]; ok {
+			return nil, nil, fmt.Errorf("name repeat.")
+		}
+		fieldtype, ok := FieldTypeMap[column.Type]
+		if !ok {
+			return nil, nil, fmt.Errorf("unknow field.")
+		}
+
+		fieldcolumn, err := ParseColumn(row, column.Title)
+		if err != nil {
+			return nil, nil, err
+		}
+
+		field := &Field{column.Name, column.Title, fieldtype, fieldcolumn}
+		if column.Key {
+			keyfields = append(keyfields, field)
 		} else {
-			return false
+			fields = append(fields, field)
 		}
+		fieldmap[field.Name] = field
 	}
-	return true
-}
-
-func (this *Parser) parseField(row *xlsx.Row, column Column) (*Field, bool) {
-	for index, cell := range row.Cells {
-		if cell.String() == column.Title {
-			return &Field{column.Name, index, column.Type, column.Title}, false
-		}
-	}
-	return nil, false
-}
-
-func (this *Parser) export() {
-
+	return keyfields, fields, nil
 }

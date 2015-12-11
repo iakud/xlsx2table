@@ -6,10 +6,7 @@ import (
 )
 
 type TableSet struct {
-	InputPath  string  `xml:"inputpath,attr"`
-	OutputPath string  `xml:"outputpath,attr"`
-	Language   string  `xml:"language,attr"`
-	Tables     []Table `xml:"table"`
+	Tables []Table `xml:"table"`
 }
 
 type Table struct {
@@ -26,12 +23,16 @@ type Column struct {
 	Type  string `xml:"type,attr"`
 }
 
-func (this *TableSet) ParseFile(filename string) error {
+func NewTableSet() *TableSet {
+	return &TableSet{}
+}
+
+func (this *TableSet) Parse(filename string) error {
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
 		return err
 	}
-	err = xml.Unmarshal(content, &this)
+	err = xml.Unmarshal(content, this)
 	if err != nil {
 		return err
 	}

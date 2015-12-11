@@ -1,31 +1,36 @@
 package main
 
 import (
-	//"encoding/binary"
 	"flag"
 	"log"
-	"path/filepath"
+	"reflect"
 )
 
+var FileName, InputPath, OutputPath, Language string
+
 func main() {
-	var filename string
-	flag.StringVar(&filename, "file", "table.xml", "input description file")
+	//var datas [][]interface{}
+	//var row []interface{}
+	//var m map[int]string
+	//t := reflect.TypeOf(m)
+	reflect.Kind
+	flag.StringVar(&FileName, "f", "", "description file")
+	flag.StringVar(&InputPath, "i", "", "input path")
+	flag.StringVar(&OutputPath, "o", "", "output path")
+	flag.StringVar(&Language, "l", "", "language")
 	flag.Parse()
 
-	var tableset TableSet
-	err := tableset.ParseFile(filename)
+	tableset := NewTableSet()
+	err := tableset.Parse(FileName)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	relativedir := filepath.Dir(filename)
-
-	inputpath := filepath.Join(relativedir, tableset.InputPath)
-	outputpath := filepath.Join(relativedir, tableset.OutputPath)
-	parser := NewParser(inputpath, outputpath, tableset.Language)
-
 	for _, table := range tableset.Tables {
-		parser.ParseTable(&table)
+		err = ExportTable(&table)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 }
 
