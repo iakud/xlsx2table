@@ -8,7 +8,7 @@ int main() {
 		std::cout << "int16 Value:" << (*it)->i16 << std::endl;
 		std::cout << "int32 Value:" << (*it)->i32 << std::endl;
 		std::cout << "int64 Value:" << (*it)->i64 << std::endl;
-		printf("float, double: %f, %f", (*it)->f, (*it)->df);
+		printf("float, double: %f, %f\n", (*it)->f, (*it)->df);
 		std::cout << "string Value:" << (*it)->s << std::endl;
 		int size = static_cast<int>((*it)->v.size());
 		for (int i = 0; i < size; ++i) {
