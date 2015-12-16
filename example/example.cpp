@@ -3,7 +3,7 @@
 
 int main() {
 	exampleTable tb;
-	exampleItem* item = tb.getItem(exampleTable::id_type(true, 1));
+	exampleItem* item = tb.getItem(exampleItem::id_type(true, 1));
 	if (item != NULL) {
 		std::cout << "find item by id: " << item->id.b << "," << item->id.i8 << std::endl;
 	}
