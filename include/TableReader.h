@@ -18,7 +18,6 @@ public:
 	const Item* getItem(const typename Item::id_type& Id) const;
 
 protected:
-
 	Set _items;
 	bool init(const char* filename);
 };
