@@ -3,6 +3,10 @@
 
 int main() {
 	exampleTable tb;
+	exampleItem* item = tb.getItem(exampleTable::id_type(true, 1));
+	if (item != NULL) {
+		std::cout << "find item by id: " << item->id.b << "," << item->id.i8 << std::endl;
+	}
 	const exampleTable::Set& items = tb.getItems();
 	for (exampleTable::Set::const_iterator it = items.begin(); it != items.end(); ++it) {
 		std::cout << "int16 Value: " << (*it)->i16 << std::endl;
