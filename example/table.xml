@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <tableset>
-	<table name="Person" file="example.xlsx" sheet="Sheet1">
-		<column name="Id" key="1" title="编号" type="uint32"/>
-		<column name="Name" title="名称" type="string"/>
+	<table name="example" file="example.xlsx" sheet="Sheet1">
+		<column name="b" key="true" title="布尔" type="bool"/>
+		<column name="i8" key="true" title="8位int" type="int8"/>
+		<column name="i16" title="16位int" type="int16"/>
+		<column name="i32" title="32位int" type="int32"/>
+		<column name="i64" title="64位int" type="int64"/>
+		<column name="n8" title="8位uint" type="uint8"/>
+		<column name="n16" title="16位uint" type="uint16"/>
+		<column name="n32" title="32位uint" type="uint32"/>
+		<column name="n64" title="64位uint" type="uint64"/>
+		<column name="f" title="单精度浮点数" type="float"/>
+		<column name="df" title="双精度浮点数" type="double"/>
+		<column name="s" title="字符串" type="string"/>
+		<column name="v" title="数组" type="vector[uint32]"/>
+		<column name="m" title="键值集合" type="map[string,string]"/>
 	</table>
 </tableset>

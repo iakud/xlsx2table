@@ -5,36 +5,33 @@ import (
 	"io/ioutil"
 )
 
-type TableSet struct {
-	Tables []Table `xml:"table"`
+type tableset struct {
+	Tables []table `xml:"table"`
 }
 
-type Table struct {
+type table struct {
 	Name    string   `xml:"name,attr"`
 	File    string   `xml:"file,attr"`
 	Sheet   string   `xml:"sheet,attr"`
-	Columns []Column `xml:"column"`
+	Columns []column `xml:"column"`
 }
 
-type Column struct {
+type column struct {
 	Name  string `xml:"name,attr"`
 	Key   bool   `xml:"key,attr"`
 	Title string `xml:"title,attr"`
 	Type  string `xml:"type,attr"`
 }
 
-func NewTableSet() *TableSet {
-	return &TableSet{}
-}
-
-func (this *TableSet) Parse(filename string) error {
+func ParseConfigFile(filename string) ([]table, error) {
 	content, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	err = xml.Unmarshal(content, this)
+	var set tableset
+	err = xml.Unmarshal(content, &set)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return set.Tables, nil
 }

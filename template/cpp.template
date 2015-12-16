@@ -1,0 +1,62 @@
+#ifndef _{{.UpperName}}_TABLE_H_
+#define _{{.UpperName}}_TABLE_H_
+
+#include "TableReader.h"
+#include <string>
+#include <assert.h>
+{{if .ComposedKey }}
+struct {{.KeyType}} {
+	{{range $k, $v := .KeyFields}}{{$v.String}}
+	{{end}}
+	bool operator<(const {{.KeyType}}& o) const;
+};
+
+inline bool {{.KeyType}}::operator<(const {{.KeyType}}& o) const {
+	{{range $k, $v := .KeyFields}}if ({{$v.Name}} != o.{{$v.Name}}) {
+		return {{$v.Name}} < o.{{$v.Name}};
+	}
+	{{end}}
+	return false;
+}
+
+inline TableStream& operator>>(TableStream& stream, {{.KeyType}}& item) {
+	{{range $k, $v := .KeyFields}}stream >> item.{{$v.Name}};
+	{{end}}
+	return stream;
+}
+{{end}}
+struct {{.ItemName}} {
+	{{.KeyString}}
+	{{range $k,$v := .Fields}}{{$v.String}}
+	{{end}}
+	typedef {{.KeyType}} id_type;
+	
+	struct Compare {
+		bool operator()(const {{.ItemName}}* a, const {{.ItemName}}* b) const {
+			return a->{{.KeyName}} < b->{{.KeyName}};
+		}
+	};
+	
+	void SetId(const id_type& itemId) {
+		this->{{.KeyName}} = itemId;
+	}
+};
+
+inline TableStream& operator>>(TableStream& stream, {{.ItemName}}& item) {
+	stream >> item.{{.KeyName}};
+	{{range $k, $v := .Fields}}stream >> item.{{$v.Name}};
+	{{end}}
+	return stream;
+}
+
+class {{.TableName}} : public TableReader<{{.ItemName}}> {
+public:
+	{{.TableName}}() {
+		if(!init("{{.BinaryFileName}}")) {
+			assert(false);
+		}
+	}
+	~{{.Name}}Table() {}
+};
+
+#endif // _{{.UpperName}}_TABLE_H_

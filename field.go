@@ -1,139 +1,106 @@
 package main
 
-import ()
-
-const (
-	FieldTypeUnknow = iota
-	FieldTypeBool
-	FieldTypeInt8
-	FieldTypeUInt8
-	FieldTypeInt16
-	FieldTypeUInt16
-	FieldTypeInt32
-	FieldTypeUInt32
-	FieldTypeInt64
-	FieldTypeUInt64
-	FieldTypeFloat32
-	FieldTypeFloat64
-	FieldTypeString
-)
-
-type Field struct {
-	Name   string
-	Title  string
-	Type   int
-	Column int
-}
-
-/*
 import (
-	"github.com/tealeg/xlsx"
-	"strconv"
-)
-
-const (
-	FieldTypeUnknow = iota
-	FieldTypeBool
-	FieldTypeInt8
-	FieldTypeUInt8
-	FieldTypeInt16
-	FieldTypeUInt16
-	FieldTypeInt32
-	FieldTypeUInt32
-	FieldTypeInt64
-	FieldTypeUInt64
-	FieldTypeFloat32
-	FieldTypeFloat64
-	FieldTypeString
+	"strings"
 )
 
 type Field struct {
-	Name   string
-	Title  string
-	Type   int
-	Column int
+	name   string
+	title  string
+	ctype  Type
+	column int
 }
 
-func NewField(name string, title string, tp int) *Field {
-	return &Field{Name: name, Title: title, Type: tp}
+func NewField(name string, title string, ctype Type, column int) *Field {
+	return &Field{name, title, ctype, column}
 }
 
-func (this *Field) Parse(row *xlsx.Row) bool {
-	for column, cell := range row.Cells {
-		if cell.String() == this.Title {
-			this.Column = column
-			return true
-		}
+func (f *Field) Name() string {
+	return f.name
+}
+
+func (f *Field) Title() string {
+	return f.title
+}
+
+func (f *Field) Type() Type {
+	return f.ctype
+}
+
+func (f *Field) Column() int {
+	return f.column
+}
+
+func (f *Field) String() string {
+	return f.Type().String() + " " + f.Name() + "; // " + f.Title()
+}
+
+type FieldTable struct {
+	name   string
+	keys   []*Field
+	fields []*Field
+}
+
+func NewFieldTable(name string, keys []*Field, fields []*Field) *FieldTable {
+	return &FieldTable{name, keys, fields}
+}
+
+func (ft *FieldTable) ComposedKey() bool {
+	return len(ft.keys) > 1
+}
+
+func (ft *FieldTable) KeyType() string {
+	if ft.ComposedKey() {
+		return ft.name + "Id"
+	} else {
+		return ft.keys[0].Type().String()
 	}
-	return false
 }
 
-func (this *Field) ParseData(str string) (interface{}, error) {
-	switch tp {
-	case FieldTypeBool:
-		value, err := strconv.ParseBool(str)
-		return value, err
-	case FieldTypeInt8:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return int8(v), nil
-	case FieldTypeUInt8:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return uint8(v), nil
-	case FieldTypeInt16:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return int16(v), nil
-	case FieldTypeUInt16:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return uint16(v), nil
-	case FieldTypeInt32:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return int32(v), nil
-	case FieldTypeUInt32:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return uint32(v), nil
-	case FieldTypeInt64:
-		v, err := cell.Int64()
-		if err != nil {
-			return nil, err
-		}
-		return int64(v), nil
-	case FieldTypeUInt64:
-		v, err := cell.Int()
-		if err != nil {
-			return nil, err
-		}
-		return uint64(v), nil
-	case FieldTypeFloat32:
-		value, err := atof32(str)
-		return value, err
-	case FieldTypeFloat64:
-		value, err := atof64(str)
-		return value, err
-	case FieldTypeString:
-		return cell.String(), nil
+func (ft *FieldTable) KeyName() string {
+	if ft.ComposedKey() {
+		return "id"
+	} else {
+		return ft.keys[0].Name()
 	}
-	return nil, fmt.Errorf("Unknow type")
 }
 
-func (this *Field) ParseBool(str string) bool {
-
+func (ft *FieldTable) KeyString() string {
+	if ft.ComposedKey() {
+		return ft.name + "Id" + " " + "id;"
+	} else {
+		return ft.keys[0].String()
+	}
 }
-*/
+
+func (ft *FieldTable) KeyFields() []*Field {
+	return ft.keys
+}
+
+func (ft *FieldTable) Fields() []*Field {
+	return ft.fields
+}
+
+func (ft *FieldTable) Name() string {
+	return ft.name
+}
+
+func (ft *FieldTable) UpperName() string {
+	return strings.ToUpper(ft.Name())
+}
+
+func (ft *FieldTable) TableName() string {
+	return ft.Name() + "Table"
+}
+
+func (ft *FieldTable) ItemName() string {
+	return ft.Name() + "Item"
+}
+
+func (ft *FieldTable) TableFileName() string {
+	return ft.TableName() + ".h"
+}
+
+func (ft *FieldTable) BinaryFileName() string {
+	return ft.TableName() + ".binary"
+}
