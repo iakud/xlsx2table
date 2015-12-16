@@ -8,7 +8,7 @@ int main() {
 	itemId.i8 = 1;
 	const exampleItem* item = tb.getItem(itemId);
 	if (item != NULL) {
-		std::cout << "find item by id: " << item->id.b << "," << item->id.i8 << std::endl;
+		printf("key: %s, %d\n", item->id.b ? "true" : "false", item->id.i8);
 	}
 	const exampleTable::Set& items = tb.getItems();
 	for (exampleTable::Set::const_iterator it = items.begin(); it != items.end(); ++it) {
