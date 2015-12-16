@@ -22,29 +22,30 @@ func main() {
 	codetemplate := newCodeTemplate()
 
 	for _, table := range tables {
+		log.Println("export", table.Name)
 		sheet, err := openXlsSheet(filepath.Join(inputpath, table.File), table.Sheet)
 		if err != nil {
 			log.Println(err)
-			return
+			continue
 		}
 		fieldtable, err := parseFieldTable(table.Name, sheet.Rows[0], table.Columns)
 		if err != nil {
 			log.Println(err)
-			return
+			continue
 		}
 		binarytable := newBinaryTable(fieldtable.KeyFields(), fieldtable.Fields())
 		tablepath := filepath.Join(outputpath, fieldtable.BinaryFileName())
 		err = binarytable.WriteFile(tablepath, sheet.Rows[1:])
 		if err != nil {
 			log.Println(err)
-			return
+			continue
 		}
 
 		codepath := filepath.Join(outputpath, fieldtable.TableFileName())
 		err = codetemplate.WriteFile(codepath, fieldtable)
 		if err != nil {
 			log.Println(err)
-			return
+			continue
 		}
 	}
 }
