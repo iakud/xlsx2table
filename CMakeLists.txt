@@ -7,7 +7,7 @@ set(CXX_FLAGS
 	-Wall
 	-Wextra
 	-Werror
-#	-Wconversion
+	-Wconversion
 	-Wno-unused-parameter
 	-Wold-style-cast
 	-Woverloaded-virtual
@@ -23,12 +23,11 @@ string(REPLACE ";" " " CMAKE_CXX_FLAGS "${CXX_FLAGS}")
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
-#include_directories(${PROJECT_SOURCE_DIR}/include)
-#aux_source_directory(${PROJECT_SOURCE_DIR}/src SOURCE_FILES)
+include_directories(${PROJECT_SOURCE_DIR}/include)
+aux_source_directory(${PROJECT_SOURCE_DIR}/src SOURCE_FILES)
 
-#add_library(tablegen ${SOURCE_FILES})
-add_executable(table src/TableStream.cpp src/main.cpp)
+add_library(table ${SOURCE_FILES})
 
 if (NOT CMAKE_BUILD_NO_EXAMPLES)
-	#add_subdirectory(example)
+	add_subdirectory(example)
 endif()
