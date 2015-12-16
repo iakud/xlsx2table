@@ -10,7 +10,7 @@ int main() {
 		std::cout << "int64 Value:" << (*it)->i64 << std::endl;
 		printf("float, double: %f, %f", (*it)->f, (*it)->df);
 		std::cout << "string Value:" << (*it)->s << std::endl;
-		int size = (*it)->v.size();
+		int size = static_cast<int>((*it)->v.size());
 		for (int i = 0; i < size; ++i) {
 			std::cout << "vector Value:" << (*it)->v[i] << std::endl;
 		}

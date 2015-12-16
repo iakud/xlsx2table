@@ -46,7 +46,7 @@ bool TableReader<Item>::init(const char* filename) {
 		return false;
 
 	ifs.seekg (0, std::ios::end);
-	int length = ifs.tellg();
+	int length = static_cast<int>(ifs.tellg());
     ifs.seekg(0, std::ios::beg);
     char* buffer = new char[length];
     ifs.read(buffer, length);
