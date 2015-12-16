@@ -3,4 +3,4 @@
 config=example/table.xml
 inputpath=example/xls
 outputpath=example
-./xls2table $config $inputpath $outputpath
+./xls2table -f $config -i $inputpath -o $outputpath
