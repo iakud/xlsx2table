@@ -28,7 +28,7 @@ const typename TableReader<Item>::Set& TableReader<Item>::getItems() const {
 }
 
 template<class Item>
-const Item* TableReader<Item>::getItem(const typename Item::id_type &id) const {
+const Item* TableReader<Item>::getItem(const typename Item::id_type& id) const {
 	Item item;
 	item.setId(id);
 	typename Set::const_iterator it = _items.find(&item);

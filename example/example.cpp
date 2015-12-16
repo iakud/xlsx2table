@@ -6,7 +6,7 @@ int main() {
 	exampleItem::id_type itemId;
 	itemId.b = true;
 	itemId.i8 = 1;
-	exampleItem* item = tb.getItem(itemId);
+	const exampleItem* item = tb.getItem(itemId);
 	if (item != NULL) {
 		std::cout << "find item by id: " << item->id.b << "," << item->id.i8 << std::endl;
 	}
