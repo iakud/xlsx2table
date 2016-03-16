@@ -1,6 +1,6 @@
 #!/bin/bash
 
 config=example/table.xml
-inputpath=example/xls
+inputpath=example/xlsx
 outputpath=example
-./xls2table -f $config -i $inputpath -o $outputpath
+./xlsx2table -f $config -i $inputpath -o $outputpath

@@ -1,2 +1,2 @@
-# xls2table
-excel数据转换
+# xlsx2table
+xlsx数据转换
